@@ -117,4 +117,31 @@ public class ActivityService extends BaseService{
         return activityPageInfo;
     }
 
+
+
+    /**
+     * 分页查询
+     */
+    public PageInfo<Activity> selectPageTEST(Activity activity, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Activity> list = activityMapper.selectAll(activity);
+
+        //改造代码部分
+        Map<String, String> checkSwitchOpen = ParaConfig("CHECK_SWITCH_OPEN");
+        String paracode1 = checkSwitchOpen.get("PARACODE1");
+        List<Activity> list_return = new ArrayList<>();
+        if(paracode1.equals("true")){
+            for (Activity activity1 : list) {
+                if(activity1.getTag()==0){
+                    list_return.add(activity1);
+                }
+            }
+            list = list_return;
+        }
+        //改造完成
+
+        PageInfo<Activity> activityPageInfo = PageInfo.of(list);
+
+        return activityPageInfo;
+    }
 }
